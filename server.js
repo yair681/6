@@ -232,6 +232,8 @@ app.get('/api/classes/:id', async (req, res) => {
         const students = await Student.find({ classId: req.params.id }).select('_id password name balance');
         const teachers = await Teacher.find({ classId: req.params.id }).select('_id password name');
         
+        console.log('Retrieved students:', students.map(s => ({ name: s.name, password: s.password })));
+        
         res.json({
             class: classInfo,
             students,
@@ -293,6 +295,8 @@ app.post('/api/create-student', async (req, res) => {
     try {
         const { password, name, balance, classId } = req.body;
         
+        console.log('Creating student with data:', { password, name, balance, classId });
+        
         if (!password || !name || !classId) {
             return res.json({ success: false, message: 'סיסמה, שם וכיתה הן שדות חובה' });
         }
@@ -303,17 +307,20 @@ app.post('/api/create-student', async (req, res) => {
         }
 
         const newStudent = new Student({
-            password,
-            name,
+            password: password,
+            name: name,
             balance: parseInt(balance) || 0,
-            classId
+            classId: classId
         });
-
+        
+        console.log('About to save student:', newStudent);
         await newStudent.save();
+        console.log('Student saved successfully:', newStudent);
+        
         res.json({ success: true, message: `התלמיד ${name} נוצר בהצלחה`, student: newStudent });
     } catch (error) {
         console.error("Create student error:", error);
-        res.json({ success: false, message: 'שגיאה בשמירת תלמיד חדש' });
+        res.json({ success: false, message: 'שגיאה בשמירת תלמיד חדש: ' + error.message });
     }
 });
 
