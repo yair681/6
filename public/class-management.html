@@ -317,7 +317,7 @@
                     studentsTable.innerHTML = data.students.map(student => `
                         <tr>
                             <td>${student.name}</td>
-                            <td>${student.password}</td>
+                            <td><strong>${student.password || '<span style="color:red;">חסרה סיסמה</span>'}</strong></td>
                             <td id="bal-${student._id}">${student.balance} נקודות</td>
                             <td>
                                 <button class="action-btn" style="background:#28a745; color:white;" onclick="updateBalance('${student._id}', 5)">+5</button>
@@ -336,7 +336,7 @@
                     teachersTable.innerHTML = data.teachers.map(teacher => `
                         <tr>
                             <td>${teacher.name || 'ללא שם'}</td>
-                            <td>${teacher.password}</td>
+                            <td><strong>${teacher.password || '<span style="color:red;">חסרה סיסמה</span>'}</strong></td>
                             <td>
                                 <button class="action-btn btn-delete" onclick="deleteTeacher('${teacher._id}', '${teacher.name}')">מחק</button>
                             </td>
